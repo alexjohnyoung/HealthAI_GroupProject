@@ -9,7 +9,7 @@ body {
 .header {
     background-color: #ffffff;
     color: #10b4d1;
-    border: 1px solid #ccc; /* Add a grey border */
+    border: 1px solid #ccc; 
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
     padding: 5px;
     display: flex;
@@ -57,29 +57,24 @@ body {
     color: #0056b3; 
 }
 
-h3 {
-    position: absolute;
-    top: 50%; 
-    left: 20px; 
-    transform: translateY(-50%); 
-    font-size: 20px;
-    color: white; 
-    padding: 10px; 
-    border: 2px solid white; 
-    background-color: rgba(0, 0, 0, 0.7); 
-}
 
 .about {
-    position: absolute;
-    top: 50%; 
-    left: 20px; 
-    transform: translateY(-50%); 
     font-size: 18px;
-    color: white; 
-    padding: 10px; 
-    border: 2px solid white; 
+    color: #ffffff; 
+    padding: 20px;
+    background-color: #fff;
     background-color: rgba(0, 0, 0, 0.7); 
+    padding: 10px; 
+    margin: 20px;
 }
+
+@media screen and (max-width: 768px) {
+    .about {
+        font-size: 16px; 
+        margin: 10px;
+    }
+}
+
 
 .contact {
     position: absolute;
@@ -94,25 +89,54 @@ h3 {
     text-align: center; 
 }
 
-.page-container {
-    display: flex;
-    justify-content: flex-end; /* Align everything to the right */
-    width: 80%;
-    margin: 0 auto; 
+@media screen and (max-width: 768px) {
+    .contact {
+        font-size: 16px; 
+        margin: 10px;
+    }
 }
 
 /* index form */
 .index_form {
     width: 400px;
-    box-shadow: 0 0 10px 0 rgba(0,0,0,0.3);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
     background: #fff;
     padding: 30px;
-    margin: 5% 0 20px 20px; 
+    margin: 5% 0 20px 20px;
     text-align: center;
     border-radius: 20px;
-    border-right: 20px solid transparent; 
+    border-right: 20px solid transparent;
 }
 
+h3 {
+    font-size: 20px;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    border: 2px solid white;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.page-container {
+    display: flex;
+    justify-content: flex-end; 
+    width: 80%;
+    margin: 0 auto;
+}
+
+@media screen and (max-width: 600px) {
+    .page-container {
+        flex-direction: column; 
+        align-items: center; 
+    }
+    h3 {
+        position: static;
+        text-align: center; 
+        width: 80%; 
+        margin: 0 auto; 
+        border: none; 
+    }
+}
 
 
 /* Footer Styles */
