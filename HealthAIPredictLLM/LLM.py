@@ -246,6 +246,8 @@ class GPT:
                 # Create the key with the feature name and assign it to the value from our second index in our dict
                 feature_dict[feature] = val
 
+            print(feature_dict)
+
             # And finally get our result and the probability
             result, probability = self.analyser.perform_analysis(risk_type, feature_dict)
 
@@ -280,15 +282,17 @@ class GPT:
                 },
                 {
                     "role": "system",
-                    "content": "For heart disease risk assessment, take into account age, sex, "
-                               "chest pain type (cp), resting blood pressure (trestbps), cholesterol levels (chol), "
-                               "fasting blood sugar (fbs - 0: below 120 mg/dl threshold, 1: above threshold), rest ECG "
-                               "(restecg - 0: normal, 1: abnormality in the ST-T wave, 2: showing probable or definite "
-                               "left ventricular hyperthrophy), maximum heart rate achieved (thalach), "
-                               "exercise induced angina (exang), ST depression (oldpeak), the slope of the peak exercise "
-                               "ST segment (0: upsloping, 1: flat, 2: downsloping), "
-                               "number of major vessels colored by flourosopy (ca), and thalassemia "
-                               "(thal - 0: normal, 1: fixed defect, 2: reversible defect)."
+                    "content": "For heart disease risk assessment, consider the following parameters: "
+                               "Age (age of the patient), Sex (biological gender of the patient), "
+                               "RestingBP (resting blood pressure), Cholesterol (serum cholesterol in mg/dl), "
+                               "FastingBS (fasting blood sugar > 120 mg/dl, 1 = true; 0 = false), "
+                               "MaxHR (maximum heart rate achieved), "
+                               "ExerciseAngina (exercise-induced angina, 1 = yes; 0 = no), "
+                               "Oldpeak (ST depression induced by exercise relative to rest), "
+                               "ChestPainType (type of chest pain experienced with categories TA: Typical Angina "
+                               "ATA: Atypical Angina, NAP: Non-Anginal Pain, ASY: Asymptomatic)"
+                               "RestingECG (resting electrocardiographic results with categories like Normal, LVH, ST),"
+                               " and ST_Slope (the slope of the peak exercise ST segment with categories like Up, Flat, Down)."
                 },
                 {
                     "role": "system",
@@ -307,6 +311,8 @@ class GPT:
 
         # Get the reply from the AI
         reply = response.choices[0].message.content
+
+        print(reply)
 
         # Convert the reply into all lowercase and store in reply_lower
         reply_lower = reply.lower()
