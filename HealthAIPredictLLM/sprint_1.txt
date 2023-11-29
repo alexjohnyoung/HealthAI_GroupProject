@@ -1,0 +1,66 @@
+#### Sprint 1:
+
+- Gathered Breast Cancer dataset, disregarded colon dataset
+
+** Heart Disease:
+- One-hot encoded "cp", "slope" and "ca" features - improved accuracy 
+
+Challenges:
+- Imbalanced dataset: 526 instances of patients with identified heart disease and only 499 instances of patients without identified heart disease 
+Solution:
+- Implemented SMOTE technique to synthetically generate more negative samples to match number of positive cases 
+
+- Dropping first category value with 'drop_first=True' lowered accuracy
+Solution:
+- Changing 'drop_first=False' to retain all columns 
+
+Challenges:
+- One-hot encoding "restecg" and "thal" features lowered accuracy, possibly due to increased dimensionality (may lead to too many columns with too many unique values, or may not have enough unique values)
+Solution:
+- Removed one-hot encoding for "restecg" and "thal" features
+
+** Breast Cancer:
+- Standardized all features - improved accuracy
+
+Challenges:
+- Imbalanced dataset: 357 instances of patients with identified breast cancer and only 212 instances of patients without identified breast cancer 
+Solution:
+- Used SMOTE technique to synthetically generate more negative samples to match number of positive cases
+
+** Lung Cancer:
+
+- Removed trailing spaces from the header names 'FATIGUE ' and 'ALLERGY '.
+- Dropped ANXIETY and PEER_PRESSURE fields as I did not think they were directly correlated with lung cancer 
+
+Challenges:
+- Imbalanced dataset: 270 instances of patients with identified lung cancer and only 39 instances of patients without identified lung cancer
+Solution:
+- Implemented SMOTE technique to synthetically generate more negative samples to match number of positive cases
+
+Challenges:
+- Attempted standardization but kept same accuracy levels
+Solution:
+- Removed standardization as did not harbour any value  
+
+Threshold: shifted to 0.4 threshold to favour higher recall. Recommended for healthcare scenarios to ensure that we can detect as many life-threatening diseases as possible, even if it means accepting some more false-positives.
+
+** MLAnalyser Class:
+- Implemented train_logistic_regression(filename, target) method -> filename of csv, target feature of csv
+- Implemented perform_analysis(self, type_analysis, feature_list) method -> type of analysis (heart/lung/breast), feature list passed from API 
+
+** Flask API: 
+- Created @analysis route 
+
+Challenges:
+- When receiving an analysis request for heart disease, the one-hot encoding in the originally trained model caused a 'missing columns' problem for the API when the user sent in the original columns
+Solution:
+- Built a one-hot encoder method which would fill in the missing columns if they were no longer present and set them to '0'
+
+Personal Feedback:
+Definitely a lot of knowledge gained from this sprint. My understanding of Logistic Regression and preprocessing techniques definitely improved and I can definitely say that I am very interested in the field of Machine Learning. A few different challenges were faced but managed to overcome them with a lot of testing as well as trial-and-error. 
+
+I also delved into Flask in order to learn how to build my own API. This was not too hard in comparison to Machine Learning. I found this whole process very fruitful for me and can definitely see the use of this in real-world applications.
+
+---
+Ideas and suggestions for making future sprints more efficient, effective, or smoother.
+Feedback: While we did communicate on a weekly basis, more interaction between team-members would be more beneficial.

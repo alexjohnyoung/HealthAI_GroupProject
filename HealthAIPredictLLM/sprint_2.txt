@@ -1,0 +1,333 @@
+HealthAI-Predict:
+	- Returns probability score of each risk assessment 
+
+	Lung Cancer:
+		- Dropped 'YELLOW_FINGERS' column
+
+	After comparing models using hypertuning with LogisticRegression DecisionTree, RandomForest and SVC I found that 
+	both SVC and Logistic Regression had the best accuracy. To find the parameters that work best for SVM I implemented a "tune_svm" method.
+	This method performs performance using cross-validation with the use of GridSearchCV.
+
+	GridSearchCV is used for hyperparameter tuning - the process of finding the optimal set of parameters for a machine learning model.
+	We define a grid of parameters that we want to try with a machine learning model.
+	GridSearchCV performs cross-validation for each combination of parameters in the grid. 
+
+	Cross-validation:
+	Cross-validation involves splitting the training data into many subsets, training the model on some subsets (known as training folds) and validating it on the remaining subsets (validation folds). This process is repeated multiple times, each time with a different fold serving as the validation set.
+
+	For each parameter combination, GridSearchCV evaluates the model's performance on the validation set. After trying all the different combinations, GridSearchCV selects the combination that yielded the best performance on the validation sets.
+
+	After analysing lung.csv: 
+		Best Parameters: {'C': 100, 'gamma': 0.001, 'kernel': 'rbf'}
+		Test Accuracy: 0.9137931034482759
+		              precision    recall  f1-score   support
+
+		           0       0.81      0.94      0.87        18
+		           1       0.97      0.90      0.94        40
+
+		    accuracy                           0.91        58
+		   macro avg       0.89      0.92      0.90        58
+		weighted avg       0.92      0.91      0.92        58
+
+	After analysing heart.csv: 
+		Best Parameters: {'C': 1, 'gamma': 1, 'kernel': 'linear'}
+		Test Accuracy: 0.8095238095238095
+		              precision    recall  f1-score   support
+
+		           0       0.81      0.75      0.78        28
+		           1       0.81      0.86      0.83        35
+
+		    accuracy                           0.81        63
+		   macro avg       0.81      0.80      0.81        63
+		weighted avg       0.81      0.81      0.81        63
+
+	After analysing breast.csv: 
+		Best Parameters: {'C': 10, 'gamma': 0.01, 'kernel': 'rbf'}
+		Test Accuracy: 0.916083916083916
+		              precision    recall  f1-score   support
+
+		           0       0.93      0.91      0.92        74
+		           1       0.90      0.93      0.91        69
+
+		    accuracy                           0.92       143
+		   macro avg       0.92      0.92      0.92       143
+		weighted avg       0.92      0.92      0.92       143
+
+	Compared with Logistic Regression:
+		Logistic Regression Analysis for lung.csv
+		Accuracy: 94.83%
+		              precision    recall  f1-score   support
+
+		           0       0.89      0.94      0.92        18
+		           1       0.97      0.95      0.96        40
+
+		    accuracy                           0.95        58
+		   macro avg       0.93      0.95      0.94        58
+		weighted avg       0.95      0.95      0.95        58
+
+
+		Logistic Regression Analysis for heart.csv
+		Accuracy: 82.54%
+		              precision    recall  f1-score   support
+
+		           0       0.87      0.71      0.78        28
+		           1       0.80      0.91      0.85        35
+
+		    accuracy                           0.83        63
+		   macro avg       0.83      0.81      0.82        63
+		weighted avg       0.83      0.83      0.82        63
+
+
+		Logistic Regression Analysis for breast.csv
+		Accuracy: 90.91%
+		              precision    recall  f1-score   support
+
+		           0       0.94      0.88      0.91        74
+		           1       0.88      0.94      0.91        69
+
+		    accuracy                           0.91       143
+		   macro avg       0.91      0.91      0.91       143
+		weighted avg       0.91      0.91      0.91       143
+
+	From looking at both of these results, I can see that Logistic Regression offers more consistency across different datasets and is more easier to interpret. For this reason I have chosen to stick with Logistic Regression. 
+
+	I also created the "get_feature_importance" method to get the coefficients of the Logistic Regression model for each dataset and convert the log odds into odds ratios. This tells us that by every feature increase how much importance that would have on the dataset - whether an increase or decrease.
+		
+		Above 1: as the feature value increases, the odds of the outcome are multiplied by the odds ratio
+        Below 1: as the feature value increases, the odds of the outcome decrease and are multiplied by the odds ratio
+        Exactly 1: changes in the feature do not affect the odds of the outcome
+
+		Feature importance for breast.csv
+			Feature mean_radius -> 265.61
+			Feature mean_texture -> 0.83
+			Feature mean_perimeter -> 0.51
+			Feature mean_area -> 0.98
+			Feature mean_smoothness -> 0.76
+
+		From the breast cancer feature analysis we can see that the mean_radius feature has a substantial effect on the predicted outcome whereas when the other features increase, this decreases the predicted outcome.
+
+		Feature importance for lung.csv
+			Feature GENDER -> 1.21
+			Feature AGE -> 1.02
+			Feature SMOKING -> 4.06
+			Feature CHRONIC_DISEASE -> 7.20
+			Feature FATIGUE -> 5.04
+			Feature ALLERGY -> 4.66
+			Feature WHEEZING -> 2.44
+			Feature ALCOHOL CONSUMING -> 3.78
+			Feature COUGHING -> 9.81
+			Feature SHORTNESS OF BREATH -> 0.65
+			Feature SWALLOWING DIFFICULTY -> 12.54
+			Feature CHEST PAIN -> 3.58
+
+		From the lung cancer feature analysis we can see that as most of the feature values increase, this generally increases the likelihood of the patient having the cancer. It is interesting that the "SHORTNESS OF BREATH" feature value actually infers a decrease in the predicted outcome. This may warrant further investigation. 
+
+		Feature importance for heart.csv
+			Feature age -> 1.01
+			Feature sex -> 0.20
+			Feature cp -> 2.42
+			Feature trestbps -> 0.99
+			Feature chol -> 1.00
+			Feature fbs -> 0.85
+			Feature restecg -> 1.74
+			Feature thalach -> 1.03
+			Feature exang -> 0.44
+			Feature oldpeak -> 0.60
+			Feature slope -> 1.78
+			Feature ca -> 0.49
+			Feature thal -> 0.44
+
+		From our heart disease feature analysis we can see that while the chance of the patient having heart disease increases when most of the features increase, there are some exceptions to this - some features (sex, fbs, exang, ca and thal) actually have a negative effect on the predicted outcome as their values increases - this is an interesting discovery. It should also be noted that both the "chol" and "trestbps" columns harbouring an odds ratio close to 1 indicate that they have a very minimal effect on the predicted outcome.
+
+Heart Disease dataset:
+As our accuracy was quite low for our heart disease dataset after preprocessing, I looked for another online that may yield better results.
+
+I gathered this dataset: https://www.kaggle.com/datasets/fedesoriano/heart-failure-prediction/data
+
+I then made several changes to the dataset in order to use it with our Logistic Regression algorithm.
+
+1. Convert "Sex" categorical values to numerical values (M: 1, F: 0)
+2. Convert "ExerciseAngina" categorical values to numerical values (Y: 1, N: 0)
+
+I did this with the following code:
+df["Sex"] = df["Sex"].map({"F": 0, "M": 1})
+df["ExerciseAngina"] = df["ExerciseAngina"].map({"N": 0, "Y": 1})
+
+Next I one-hot encoded categorical values (ChestPainType, RestingECG, ST_SLOPE) into their respective nominal values using the following code:
+df = pd.get_dummies(df, columns=["ChestPainType", "RestingECG", "ST_Slope"], drop_first=False)
+
+This is a better choice than using 'map' like with "Sex" and "ExerciseAngina" as there is no ranking (e.x low, medium, high) and instead converts into nominal categories.
+
+After making these changes our new dataset then contained "True" and "False" rather than 1 and 0, so I used the following code to convert them to 1 and 0, respectively:
+
+for column in df.columns:
+    if df[column].dtype == "bool":
+        df[column] = df[column].astype(int)
+
+I then saved the modified dataset as heart_modified.csv as such:
+df.to_csv("heart_modified.csv", index=False)
+
+Next, I noticed that there was a discrepency in the number of majority and minority classes. We had 508 samples where the target "HeartDisease" was true, and only 410 samples where "HeartDisease" was false. 
+
+In order to resolve this balance, we will use SMOTE technique as done before. This is perfect as all our fields are now in binary format.
+
+I used the following code to match both classes, generating synthetic samples:
+
+- Separate features and target variable
+	x = df.drop('HeartDisease', axis=1)
+	y = df['HeartDisease']
+
+- Initialize the SMOTE object with "auto" sampling_strategy
+	smote = SMOTE(sampling_strategy="auto", random_state=42)
+
+- Fit and apply SMOTE to generate synthetic samples
+	x_resampled, y_resampled = smote.fit_resample(x, y)
+
+- x_resampled and y_resampled now contain the balanced dataset
+
+I verified this by using the following code to get the new classes:
+	majority_class = resampled_data[resampled_data['HeartDisease'] == 1]
+	minority_class = resampled_data[resampled_data['HeartDisease'] == 0]
+
+	print("Majority Class Size:", len(majority_class))
+	print("Minority Class Size:", len(minority_class))
+
+Which resulted in 508 samples in both classes
+
+- Save the resampled data to a CSV file
+	resampled_data = pd.concat([x_resampled, y_resampled], axis=1)
+	resampled_data.to_csv('resampled_heart.csv', index=False)
+
+Our new dataset is one step closer to being ready.
+
+I will now introduce scaling when training the data. I decided to scale "Age", "RestingBP", "Cholesterol", "MaxHR" and"Oldpeak" variables. I did this for a number of reasons:
+1. Different scales: Each feature operates on a different scale (e.x age: years, cholesterol: mg/dL, heart rate: beats per min)
+as such, by changing one feature it may have a much larger proportional change in the outcome compared to another feature (this may bias the model)
+2. Equal importance in features: If one feature has a much broader range of values than another feature, the algorithm might interpret it as having a much higher importance when determining the outcome. With scaling it makes sure that each feature contributes equally. 
+
+I did this using the following code when training the data:
+	columns_to_scale = ["Age", "RestingBP", "Cholesterol", "MaxHR", "Oldpeak"]
+	data[columns_to_scale] = scaler.fit_transform(data[columns_to_scale])
+
+I then performed the training with the following method:
+	analyser.train_logistic_regression("resampled_heart.csv", "HeartDisease")
+
+This gave me a prediction level of 86.76%, a jump from our previous result of 82.54%.
+
+Of course it meant that I had to change how the API read in the different data fields.
+
+Differences of both datasets:
+1. New heart dataset
+	- does not contain 'ca' feature
+	- does not contain 'thal' feature 
+	- contains one-hot encoded fields RestingECG_LVH, RestingECG_Normal and RestingECG_ST
+	- contains one-hot encoded fields ChestPainType_ASY, ChestPainType_ATA
+	- old dataset had resting blood pressure field as 'trestbps' while new dataset contains 'RestingBP'
+	- old dataset had cholesterol as 'chol' while new dataset contains 'Cholesterol' 
+
+
+We had to make some changes to our machine learning class methods:
+	- custom_one_hot_encoder function (now needs different column names)
+	After a lot of stress I developed the modified method:
+    def custom_one_hot_encoder(df):
+
+        - Perform necessary transformations like mapping, one-hot encoding
+        df['Sex'] = df['Sex'].map({'M': 1, 'F': 0})
+        df["ExerciseAngina"] = df["ExerciseAngina"].map({"N": 0, "Y": 1})
+
+        - One-hot encode categorical variables
+        categorical_cols = ["ChestPainType", "RestingECG", "ST_Slope"]
+        df = pd.get_dummies(df, columns=categorical_cols, drop_first=False)
+
+        - Make sure we don't have any boolean values
+        for column in df.columns:
+            if df[column].dtype == "bool":
+                df[column] = df[column].astype(int)
+
+        - Original dataset: Age,Sex,ChestPainType,RestingBP,Cholesterol,FastingBS,RestingECG,MaxHR,
+        - ExerciseAngina,Oldpeak,ST_Slope,HeartDisease
+
+        model_columns = [
+            "Age", "Sex", "RestingBP", "Cholesterol", "FastingBS", "MaxHR",
+            "ExerciseAngina", "Oldpeak",
+            "ChestPainType_ASY", "ChestPainType_ATA", "ChestPainType_NAP", "ChestPainType_TA",
+            "RestingECG_LVH", "RestingECG_Normal", "RestingECG_ST",
+            "ST_Slope_Down", "ST_Slope_Flat", "ST_Slope_Up"
+        ]
+
+        for col in model_columns:
+            if col not in df.columns:
+                df[col] = 0
+
+        df = df[model_columns]
+
+        return df
+
+	- perform_analysis function (change to match encoded features):
+	This was done by changing our one-hot encoder to accept these parameters instead of our old dataset:
+
+        data = pd.DataFrame([feature_list], columns=["Age", "Sex", "ChestPainType", "RestingBP",
+                                                         "Cholesterol", "FastingBS", "RestingECG",
+                                                         "MaxHR", "ExerciseAngina", "Oldpeak", "ST_Slope"])
+
+        # Transform to one-hot encoded format
+        encoded_data = self.custom_one_hot_encoder(data)
+
+        features_to_scale = ["Age", "RestingBP", "Cholesterol", "MaxHR", "Oldpeak"]
+        scaled_features = self.heart_scaler.transform(encoded_data[features_to_scale])
+        encoded_data[features_to_scale] = scaled_features
+
+    After making all changes, I noticed an increase of accuracy from our previous Heart Disease dataset from around 81-82% to around 86.70%.
+
+  	For clarity and much easier readability with our scaler and one-hot encoder, I also changed the way that the API endpoints took in requests. Originally I had to hardcode every feature that the API had to receive and build them into a list. Now I setup a dictionary with the feature name and type it was expecting and made a simple loop to get every value.
+  	For example, this was before the change:
+  	    
+  	    elif type_analysis == "breast":
+	        # mean_radius,mean_texture,mean_perimeter,mean_area,mean_smoothness,diagnosis
+	        mean_radius = float(request.args.get("mean_radius", 0))
+	        mean_texture = float(request.args.get("mean_texture", 0))
+	        mean_perimeter = float(request.args.get("mean_perimeter", 0)) 
+	        mean_area = float(request.args.get("mean_area", 0))
+	        mean_smoothness = float(request.args.get("mean_smoothness", 0))
+	        feature_list = [mean_radius, mean_texture, mean_perimeter, mean_area, mean_smoothness]
+	To this:
+	   	elif type_analysis == "breast":
+        	parameter_names = {
+                "mean_radius": float,  # Average distance from the center to the boundary of the nucleus
+                "mean_texture": float,  # Standard deviation of grayscale values in the cell nuclei
+                "mean_perimeter": float,  # Average perimeter of the nucleus
+                "mean_area": float,  # Average area covered by the nucleus
+                "mean_smoothness": float  # Measures the variation in the radius lengths
+            }
+
+   	This also made readability and future development much easier.
+
+   	The next thing I had to do is change the LLM training for the chatbot to reflect our updated dataset.
+
+   	Previous description:
+	    "role": "system",
+	    "content": "For heart disease risk assessment, take into account age, sex, "
+	    "chest pain type (cp - 0: typical angina, 1: atypical angina, "
+	    "2: non-anginal pain, 3: asymptomatic (no chest pain), resting blood pressure (trestbps)"
+	    "cholesterol levels (chol), fasting blood sugar "
+	    "(fbs - 0: below 120 mg/dl threshold, 1: above threshold), rest ECG "
+	    "(restecg - 0: normal, 1: abnormality in the ST-T wave, 2: showing probable or definite "
+	    "left ventricular hyperthrophy), maximum heart rate achieved (thalach), "
+	    "exercise induced angina (exang), ST depression (oldpeak), the slope of the peak exercise"
+	    "ST segment (0: upsloping, 1: flat, 2: downsloping), "
+	    "number of major vessels colored by flourosopy (ca), and thalassemia "
+	    "(thal - 0: normal, 1: fixed defect, 2: reversible defect)."
+
+	To this:
+		"role": "system",
+	    "content": "For heart disease risk assessment, consider the following parameters: "
+	    "Age (age of the patient), Sex (biological gender of the patient), "
+	    "RestingBP (resting blood pressure), Cholesterol (serum cholesterol in mg/dl), "
+	    "FastingBS (fasting blood sugar > 120 mg/dl, 1 = true; 0 = false), "
+	    "MaxHR (maximum heart rate achieved), "
+	    "ExerciseAngina (exercise-induced angina, 1 = yes; 0 = no), "
+	    "Oldpeak (ST depression induced by exercise relative to rest), "
+	    "ChestPainType (type of chest pain experienced with categories like ATA, NAP, etc.), "
+	    "RestingECG (resting electrocardiographic results with categories like Normal, LVH, ST),"
+	    " and ST_Slope (the slope of the peak exercise ST segment with categories like Up, Flat, Down)."
+
