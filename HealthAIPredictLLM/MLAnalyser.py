@@ -53,8 +53,8 @@ class MLAnalyser:
     def custom_one_hot_encoder(df):
 
         # Perform necessary transformations like mapping, one-hot encoding
-        df['Sex'] = df['Sex'].map({'M': 1, 'F': 0})
-        df["ExerciseAngina"] = df["ExerciseAngina"].map({"N": 0, "Y": 1})
+        df['Sex'] = df['Sex'].str.upper().map({'M': 1, 'F': 0}).fillna(df["Sex"])
+        df["ExerciseAngina"] = df["ExerciseAngina"].str.upper().map({"N": 0, "Y": 1}).fillna(df["ExerciseAngina"])
 
         # One-hot encode categorical variables
         categorical_cols = ["ChestPainType", "RestingECG", "ST_Slope"]
@@ -93,7 +93,7 @@ class MLAnalyser:
         y_prob = None
 
         if type_analysis == "heart":
-
+            # Old Heart Disease dataset
             # age,sex,cp,trestbps,chol,fbs,restecg,thalach,exang,oldpeak,slope,ca,thal,target
 
             data = pd.DataFrame([feature_list], columns=["Age", "Sex", "ChestPainType", "RestingBP",
@@ -122,7 +122,13 @@ class MLAnalyser:
 
         elif type_analysis == "breast":
             data = pd.DataFrame([feature_list], columns=["mean_radius", "mean_texture", "mean_perimeter", "mean_area", 'mean_smoothness'])
-            data = self.breast_scaler.transform(data)
+
+            data = data.astype(float)
+
+            features_to_scale = ["mean_radius", "mean_texture", "mean_perimeter", "mean_area", "mean_smoothness"]
+            scaled_features = self.breast_scaler.transform(data[features_to_scale])
+
+            data[features_to_scale] = scaled_features
 
             y_prob = self.breast_model.predict_proba(data)[:, 1]
             prediction = (y_prob > threshold).astype(int)
@@ -245,7 +251,7 @@ class MLAnalyser:
             # meaning they all fall within a similar range of values.
             # This is important for many machine learning algorithms (such as our Logistic Regression)
             # that are sensitive to the scales of their input features.
-            fields_to_standardize = ['mean_radius', 'mean_texture', 'mean_perimeter', 'mean_area', 'mean_smoothness']
+            fields_to_standardize = ["mean_radius", "mean_texture", "mean_perimeter", "mean_area", "mean_smoothness"]
             x_train[fields_to_standardize] = scaler.fit_transform(x_train[fields_to_standardize])
             x_test[fields_to_standardize] = scaler.transform(x_test[fields_to_standardize])
 

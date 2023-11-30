@@ -30,6 +30,17 @@ class GPT:
 
         return features
 
+    def get_missing_features(self, type_feature, user_features):
+        required_features = set(self.get_feature_list(type_feature))
+        provided_features = set()
+
+        for feature in user_features:
+            first_element = feature[0]
+            provided_features.add(first_element)
+
+        missing_features = required_features - provided_features
+        return missing_features
+
     def has_all_features(self, type_feature, user_features):
         required_features = set(self.get_feature_list(type_feature))
         provided_features = []
@@ -70,15 +81,26 @@ class GPT:
             feature_translation = [
                 ["age", "Age"],
                 ["sex", "Sex"],
-                ["chestpaintype", "ChestPainType"],
+                ["typeofchest", "ChestPainType"],
                 ["restingblood", "RestingBP"],
                 ["cholesterol", "Cholesterol"],
                 ["fastingblood", "FastingBS"],
                 ["restingelectro", "RestingECG"],
                 ["maximumheart", "MaxHR"],
-                ["exerciseinduced", "ExerciseAngina"],
+                ["exercise-induced", "ExerciseAngina"],
                 ["stdepression", "Oldpeak"],
                 ["slopeof", "ST_Slope"],
+                ["stsegment", "ST_Slope"],
+                ["chestpain", "ChestPainType"]
+            ]
+
+        elif risk_type == "breast":
+            feature_translation = [
+                ["meanradius", "mean_radius"],
+                ["meantexture", "mean_texture"],
+                ["meanperimeter", "mean_perimeter"],
+                ["meanarea", "mean_area"],
+                ["meansmoothness", "mean_smoothness"]
             ]
 
         for key, feature in enumerate(feature_translation):
@@ -134,14 +156,49 @@ class GPT:
         feat = feat.replace(".", "")
         feat = sub(r'[0-9]', '', feat)
         val = feature[1].replace(" ", "")
+        print(f"Parse_feature_val: {feat, val}")
 
         if val == "":
             val = "0"
         else:
-            if risk_type == "lung":
-                val = "1"
+            if risk_type == "breast":
+                pass
+            elif risk_type == "heart":
+                heart_translations = [
+                    ["ta", "TA"],
+                    ["ata", "ATA"],
+                    ["nap", "NAP"],
+                    ["asy", "ASY"],
+                    ["typical", "TA"],
+                    ["typicalangina", "TA"],
+                    ["atypical", "ATA"],
+                    ["atypicalangina", "ATA"],
+                    ["non-anginalpain", "NAP"],
+                    ["nonanginalpain", "NAP"],
+                    ["asymptomatic", "ASY"],
+                    ["asympto", "ASY"],
+                    ["lvh", "LVH"],
+                    ["rmal", "Normal"],
+                    ["normal", "Normal"],
+                    ["st", "ST"],
+                    ["up", "Up"],
+                    ["flat", "Flat"],
+                    ["down", "Down"]
+                ]
+
+                if val == "y":
+                    val = "1"
+                elif val == "n":
+                    val = "0"
+
+                for translation in heart_translations:
+                    if translation[0] in val:
+                        val = translation[1]
+                        break
 
         feat = self.translate_feature_name(risk_type, feat)
+
+        print(f"Parse_feature_val after edit: {feat, val}")
 
         return feat, val
 
@@ -167,8 +224,10 @@ class GPT:
         # If we do not have a 'risk_type' cookie in the session
         if "risk_type" not in session:
             # Set up a new 'risk_type' cookie in the session
-            session["risk_type"] = "heart"
+            session["risk_type"] = "lung"
 
+        print(session["risk_type"])
+        print(session["state"])
         # The context session cookie created to keep track of the conversation
         context = session["context"]
 
@@ -222,7 +281,12 @@ class GPT:
             # Check if we have all features provided for use with our machine learning prediction
             if not self.has_all_features(risk_type, parsed_features):
                 # If not return an error to the user
-                return jsonify({"error": "Please enter all fields!"})
+                err = "Please enter all fields!\n\nMissing features\n"
+
+                for missing_field in self.get_missing_features(risk_type, parsed_features):
+                    err += f"{missing_field}\n"
+
+                return jsonify({"error": err})
 
             # We now need to make it a dictionary as that's what the MLAnalyser accepts
             feature_dict = {}
@@ -237,8 +301,6 @@ class GPT:
 
                 # Create the key with the feature name and assign it to the value from our second index in our dict
                 feature_dict[feature] = val
-
-            print(feature_dict)
 
             # And finally get our result and the probability
             result, probability = self.analyser.perform_analysis(risk_type, feature_dict)
@@ -264,13 +326,15 @@ class GPT:
                 {
                     "role": "system",
                     "content": "For breast cancer risk assessment, discuss factors like mean radius, "
-                               "mean texture, mean perimeter, mean area, and mean smoothness."
+                               "mean texture, mean perimeter, mean area, and mean smoothness. Make sure to add colon"
+                               "before each question"
                 },
                 {
                     "role": "system",
-                    "content": "For lung cancer risk assessment, factors would be gender, age, smoking history, "
-                               "chronic diseases, fatigue, allergies, wheezing, alcohol consumption, coughing, "
-                               "shortness of breath, difficulty swallowing, and chest pain."
+                    "content": "For lung cancer risk assessment, factors would be gender, age, smoking history"
+                               "(Yes or No), chronic diseases (Yes or No), "
+                               "fatigue, allergies, wheezing, alcohol consumption (Yes or No), "
+                               "coughing, shortness of breath, difficulty swallowing, and chest pain."
                 },
                 {
                     "role": "system",
@@ -340,7 +404,7 @@ class GPT:
         context.append({"role": "assistant", "content": reply})
 
         # Return the reply to the user
-        return jsonify({"test": reply})
+        return jsonify({"msg": reply})
 
     @classmethod
     def get_instance(cls, analyser):
