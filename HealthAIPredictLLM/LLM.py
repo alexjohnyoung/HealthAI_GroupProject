@@ -17,8 +17,9 @@ class GPT:
         features = []
 
         if type_feature == "heart":
-            features = ["age", "sex", "cp", "trestbps", "chol", "fbs", "restecg",
-                       "thalach", "exang", "oldpeak", "slope", "ca", "thal"]
+            features = ["Age", "Sex", "ChestPainType", "RestingBP",
+                        "Cholesterol", "FastingBS", "RestingECG",
+                        "MaxHR", "ExerciseAngina", "Oldpeak", "ST_Slope"]
 
         elif type_feature == "lung":
             features = ["GENDER", "AGE", "SMOKING", "CHRONIC_DISEASE", "FATIGUE",
@@ -42,16 +43,6 @@ class GPT:
         return required_features == provided_features
 
     @staticmethod
-    def get_missing_features(feature_list, user_features):
-        missing_features = []
-
-        for feature in feature_list:
-            if feature not in user_features:
-                missing_features.append(feature)
-
-        return missing_features
-
-    @staticmethod
     def translate_feature_name(risk_type, given_feature):
         feature_translation = []
 
@@ -72,21 +63,22 @@ class GPT:
             ]
 
         elif risk_type == "heart":
-            feature_translation = [
-                ["age", "age"],
-                ["sex", "sex"],
-                ["chestpaintype", "cp"],
-                ["restingblood", "trestbps"],
-                ["cholesterol", "chol"],
-                ["fastingblood", "fbs"],
-                ["restingelectro", "restecg"],
-                ["maximumheart", "thalach"],
-                ["exerciseinduced", "exang"],
-                ["stdepression", "oldpeak"],
-                ["slopeof", "slope"],
-                ["numberofmajor", "ca"],
-                ["thalassemia", "thal"]
+            # ["Age", "Sex", "ChestPainType", "RestingBP",
+            #                         "Cholesterol", "FastingBS", "RestingECG",
+            #                         "MaxHR", "ExerciseAngina", "Oldpeak", "ST_Slope"]
 
+            feature_translation = [
+                ["age", "Age"],
+                ["sex", "Sex"],
+                ["chestpaintype", "ChestPainType"],
+                ["restingblood", "RestingBP"],
+                ["cholesterol", "Cholesterol"],
+                ["fastingblood", "FastingBS"],
+                ["restingelectro", "RestingECG"],
+                ["maximumheart", "MaxHR"],
+                ["exerciseinduced", "ExerciseAngina"],
+                ["stdepression", "Oldpeak"],
+                ["slopeof", "ST_Slope"],
             ]
 
         for key, feature in enumerate(feature_translation):
@@ -301,7 +293,8 @@ class GPT:
                                "feature question in just one line so that the users entered details can be easily "
                                "split using a newline and do not order them alphabetically."
                 },
-               # *context,
+                # For testing purposes, we will just comment out the context cookie for now
+                # *context,
                 {
                     "role": "user",
                     "content": user_input
