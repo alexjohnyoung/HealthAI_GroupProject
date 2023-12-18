@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Risk Profile - HealthAI Web</title>
+    <style>
+        /* Add your CSS styles here if needed */
+        .risk-section {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body class="reg">
+
+    <header class="header">
+        <div class="header-logo">
+            <img src="logo.png" alt="HealthAI Logo" class="logo">
+            <h1>HealthAI Web</h1>
+        </div>
+        <nav class="header-nav">
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="about.html">About us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h2>Risk Profile</h2>
+
+        <form id="risk-form">
+            <div class="risk-section">
+                <label for="risk">Risk Information:</label>
+                <textarea rows="4" cols="50" id="risk-notes" name="risk-notes" placeholder="Enter details here"></textarea>
+            </div>
+
+            <button type="submit" class="btn">Submit</button>
+        </form>
+    </div>
+
+    <script type="module">
+        // Import Firebase SDK as a module
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
+        import { getDatabase } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-database.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC5Q_T641swFy6w9XBwJPt2GFQ7R2cPTJo",
+            authDomain: "healthai-5976e.firebaseapp.com",
+            databaseURL: "https://healthai-5976e-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "healthai-5976e",
+            storageBucket: "healthai-5976e.appspot.com",
+            messagingSenderId: "840550089463",
+            appId: "1:840550089463:web:04301c8d436acd2af449f2"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+
+        auth.onAuthStateChanged(user => {
+            console.log(user);
+
+            // Check if the user is logged in and the token is valid
+            if (user) {
+                const currentTimestamp = Date.now();
+                const isTokenValid = currentTimestamp < user.stsTokenManager.expirationTime;
+
+                if (isTokenValid) {
+                    console.log("Token is still valid");
+                } else {
+                    console.log("Token has expired");
+                }
+            }
+        });
+    </script>
+
+    <footer class="footer">
+        <div class="footer-info">
+            <p>Email: contact@healthaiweb.com</p>
+            <p>Address: MTU, Bishopstown, Cork, Ireland</p>
+        </div>
+        <div class="footer-social">
+            <a href="#" class="social-icon">Facebook</a>
+            <a href="#" class="social-icon">Twitter</a>
+            <a href="#" class="social-icon">LinkedIn</a>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Login and Signup Page</title>
+
+    
+</head>
+<body class="registration_body">
+   
+    <header class="header">
+        <div class="header-logo">
+            <img src="logo.png" alt="HealthAI Logo" class="logo">
+            <h1>HealthAI Web</h1>
+        </div>
+        <nav class="header-nav">
+            <ul>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="about.html">About us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <h3>Welcome to HealthAI. Leading in health artificial intelligence since 2023!</h3>
+
+    <div class="page-container">
+        <div class="index_form">
+            <h2>Login</h2>
+            <form action="#" method="post" id="index_form">
+                <div class="form-group">
+                    <label for="login_email">Email:</label>
+                    <input type="email" id="login_email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login_password">Password:</label>
+                    <input type="password" id="login_password" name="password" required>
+                </div>
+                <button type="submit" class="btn" id="loginBtn">Login</button>
+            </form>
+            <p>Don't have an account? <a href="registration.html">Sign up</a></p>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Firebase SDK as a module
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
+        import { getDatabase } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-database.js";
+    
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC5Q_T641swFy6w9XBwJPt2GFQ7R2cPTJo",
+            authDomain: "healthai-5976e.firebaseapp.com",
+            databaseURL: "https://healthai-5976e-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "healthai-5976e",
+            storageBucket: "healthai-5976e.appspot.com",
+            messagingSenderId: "840550089463",
+            appId: "1:840550089463:web:04301c8d436acd2af449f2"
+        };
+    
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+    
+        function submitLoginForm(e) {
+            e.preventDefault();
+    
+            // Get email and password from the login form
+            const loginEmail = getInputVal('login_email');
+            const loginPassword = getInputVal('login_password');
+    
+            // Sign in with email and password
+            signInWithEmailAndPassword(auth, loginEmail, loginPassword)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    if (user) {
+                        // User signed in successfully
+                        console.log(loginEmail + ' logged in')
+                        // Redirect to home.html and pass the user's name as a parameter
+                        window.location.href = `home.html?uid=${user.uid}&email=${user.email}`;
+                    }
+                })
+                .catch((error) => {
+                    // Display an alert for incorrect email or password
+                    alert('Incorrect email or password. Please try again.');
+                    console.error('Error signing in:', error);
+                });
+        }
+    
+        function getInputVal(id) {
+            return document.getElementById(id).value;
+        }
+    
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('index_form').addEventListener('submit', submitLoginForm);
+        });
+    </script>
+    
+    <footer class="footer">
+        <div class="footer-info">
+            <p>Email: contact@healthaiweb.com</p>
+            <p>Address: MTU, Bishopstown, Cork, Ireland</p>
+        </div>
+        <div class="footer-social">
+            <a href="#" class="social-icon">Facebook</a>
+            <a href="#" class="social-icon">Twitter</a>
+            <a href="#" class="social-icon">LinkedIn</a>
+        </div>
+    </footer>
+</body>
+</html>

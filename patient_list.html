@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Patient List - HealthAI Web</title>
+</head>
+<body class="reg">
+    <header class="header">
+        <div class="header-logo">
+            <img src="logo.png" alt="HealthAI Logo" class="logo">
+            <h1>HealthAI Web</h1>
+        </div>
+        <nav class="header-nav">
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="about.html">About us</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        <h2>Patient List</h2>
+
+       
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Search for a patient...">
+            <button id="search-button" class="btn">Search</button>
+        </div>
+
+        
+        <div class="patient-details">
+            <h2>Patient Details</h2>
+            <textarea rows="10" cols="50" id="patient-details" placeholder="Patient details will appear here"></textarea>
+        </div>
+
+        <div>
+        <h2>HealthAI Predict Analysis</h2>
+                <textarea rows="10" cols="50" id="predict-analysis" placeholder="Enter HealthAI analysis here"></textarea>
+                <button class="btn">Add Risk Assessment Information</button>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Firebase SDK as a module
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-database.js";
+      
+        // Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyC5Q_T641swFy6w9XBwJPt2GFQ7R2cPTJo",
+          authDomain: "healthai-5976e.firebaseapp.com",
+          databaseURL: "https://healthai-5976e-default-rtdb.europe-west1.firebasedatabase.app",
+          projectId: "healthai-5976e",
+          storageBucket: "healthai-5976e.appspot.com",
+          messagingSenderId: "840550089463",
+          appId: "1:840550089463:web:04301c8d436acd2af449f2"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+      
+        auth.onAuthStateChanged(async (user) => {
+          console.log(user);
+      
+          if (user) {
+            document.getElementById("search-button").addEventListener("click", async () => {
+              const searchTerm = document.getElementById("search-input").value.trim().toLowerCase();
+              console.log("Search Term:", searchTerm);
+      
+              // Retrieve patients under the user's UID
+              const patientsRef = ref(database, `patients/${user.uid}`);
+              const snapshot = await get(patientsRef);
+      
+              if (snapshot.exists()) {
+                const patientsData = snapshot.val();
+                console.log("Patients Data:", patientsData);
+      
+                const matchingPatients = Object.keys(patientsData).filter((key) => {
+                  const lowerCaseFirstName = patientsData[key].firstName.toLowerCase();
+                  console.log("Lowercase FirstName:", lowerCaseFirstName);
+                  return lowerCaseFirstName.includes(searchTerm);
+                });
+      
+                console.log("Matching Patients:", matchingPatients);
+      
+                if (matchingPatients.length > 0) {
+                  const matchedPatientDetails = matchingPatients.map((key) => patientsData[key]);
+
+                  // Format the JSON string with indentation for better readability
+                  const formattedDetails = JSON.stringify(matchedPatientDetails, null, 2);
+
+                  // Remove symbols except for ":" and "/"
+                  const strippedDetails = formattedDetails.replace(/[^\w\s:\/]/g, '');
+
+                  document.getElementById("patient-details").value = strippedDetails;
+                } else {
+                  document.getElementById("patient-details").value = "No matching patients found.";
+                }
+
+
+              } else {
+                document.getElementById("patient-details").value = "No patients found.";
+              }
+            });
+      
+            console.log("User is logged in");
+            const currentTimestamp = Date.now();
+            const isTokenValid = currentTimestamp < user.stsTokenManager.expirationTime;
+      
+            if (isTokenValid) {
+              console.log("Token is still valid");
+            } else {
+              console.log("Token has expired");
+            }
+          }
+        });
+      </script>
+    
+    <footer class="footer">
+        <div class="footer-info">
+            <p>Email: contact@healthaiweb.com</p>
+            <p>Address: MTU, Bishopstown, Cork, Ireland</p>
+        </div>
+        <div class="footer-social">
+            <a href="#" class="social-icon">Facebook</a>
+            <a href="#" class="social-icon">Twitter</a>
+            <a href="#" class="social-icon">LinkedIn</a>
+        </div>
+    </footer>
+</body>
+</html>

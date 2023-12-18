@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>About Us - HealthAI Web</title>
+</head>
+<body class="cont">
+    <header class="header">
+        <div class="header-logo">
+            <img src="logo.png" alt="HealthAI Logo" class="logo">
+            <h1>HealthAI Web</h1>
+        </div>
+        <nav class="header-nav">
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="about.html">About us</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <div class="about">
+        <h2>About Us</h2>
+        
+        <p>Welcome to HealthAI, where we bridge the gap between healthcare and technology to create a healthier tomorrow.
+        </p>
+
+        <h2>Our Mission</h2>
+        <p>At HealthAI, our mission is to empower individuals and healthcare professionals through accurate, AI-driven health assessments, enabling early detection and proactive management of life-threatening conditions. Our focus revolves around heart disease, lung cancer, and colon cancer - striving to reduce the mortality rate through early intervention.
+        </p>
+        
+        <h2>Our Journey</h2>
+        
+        <p>Founded in 2023 by a group of passionate healthcare professionals and tech enthusiasts, HealthAI has grown into a reputable platform known for its innovative approach towards predictive healthcare management. Through utilizing cutting-edge AI technology, we've developed a suite of tools that process a vast amount of health data to provide insightful health predictions.
+        </p>
+        
+        <h2>Our Technology</h2>
+        <p>We leverage the power of Artificial Intelligence, Machine Learning, and Large Language Models to create a reliable health risk assessment system. Our bespoke software, HealthAI-Predict, utilizes internationally available medical datasets to calculate the likelihood of serious medical conditions, helping both individuals and medical professionals make informed decisions.
+        </p>
+    </div>
+
+    <script type="module">
+        // Import Firebase SDK as a module
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
+        import { getDatabase } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-database.js";
+      
+        // Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyC5Q_T641swFy6w9XBwJPt2GFQ7R2cPTJo",
+          authDomain: "healthai-5976e.firebaseapp.com",
+          databaseURL: "https://healthai-5976e-default-rtdb.europe-west1.firebasedatabase.app",
+          projectId: "healthai-5976e",
+          storageBucket: "healthai-5976e.appspot.com",
+          messagingSenderId: "840550089463",
+          appId: "1:840550089463:web:04301c8d436acd2af449f2"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+      
+        auth.onAuthStateChanged(user => {
+          console.log(user);
+      
+          // Check if the user is logged in and the token is valid
+          if (user) {
+            const currentTimestamp = Date.now();
+            const isTokenValid = currentTimestamp < user.stsTokenManager.expirationTime;
+      
+            if (isTokenValid) {
+              console.log("Token is still valid");
+            } else {
+              console.log("Token has expired");
+            }
+          }
+        });
+      </script>
+
+    <footer class="footer">
+        <div class="footer-info">
+            <p>Email: contact@healthaiweb.com</p>
+            <p>Address: MTU, Bishopstown, Cork, Ireland</p>
+        </div>
+        <div class="footer-social">
+            <a href="#" class="social-icon">Facebook</a>
+            <a href="#" class="social-icon">Twitter</a>
+            <a href="#" class="social-icon">LinkedIn</a>
+        </div>
+    </footer>
+    
+</body>
+</html>
