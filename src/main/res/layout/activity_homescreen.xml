@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginBottom="80dp"
+        android:src="@drawable/logo" />
+
+    <Button
+        android:id="@+id/gp_details"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="GP Details" />
+
+    <Button
+        android:id="@+id/insurance_company"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Insurance Company" />
+
+
+
+    <Button
+        android:id="@+id/contact_gp"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Contact GP" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp">
+
+        <Button
+            android:id="@+id/healthAI"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="Health AI Predict"
+
+            />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        >
+
+        <Button
+            android:id="@+id/reviews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Reviews" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</LinearLayout>

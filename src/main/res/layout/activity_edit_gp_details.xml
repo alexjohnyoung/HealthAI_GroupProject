@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    >
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:src="@drawable/logo" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_horizontal"
+        android:text="Your General Practitioner"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+
+
+    <Spinner
+        android:id="@+id/spinnerDoctor"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_margin="15dp"
+        android:background="@drawable/edit_text_border"
+        android:gravity="center_horizontal"/>
+
+
+    <LinearLayout
+        android:background="@drawable/edit_text_border"
+        android:layout_width="300dp"
+        android:layout_height="70dp"
+        android:layout_margin="15dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:background="@drawable/edit_text_border"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Medical Card:"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Medical Card" />
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/button_homepage"
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:text="Home" />
+
+    <Button
+        android:id="@+id/button_confirm"
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:text="Confirm" />
+
+</LinearLayout>

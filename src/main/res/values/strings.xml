@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">HealthAI</string>
+    <string-array name="insurance_companies">
+        <item>Company 1</item>
+        <item>Company 2</item>
+        <item>Company 3</item>
+        <!-- Add more companies as needed -->
+    </string-array>
+</resources>

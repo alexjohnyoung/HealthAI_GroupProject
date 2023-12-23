@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:targetApi="31">
+
+        <activity
+            android:name=".CreateAccountActivity"
+            android:exported="false"
+            android:label="Create Account"
+            android:parentActivityName=".MainActivity" />
+
+        <activity android:name=".GPDetailsActivity"
+            android:exported="false"
+            android:label="GP Details"
+            android:parentActivityName=".HomescreenActivity"/>
+
+        <activity android:name=".EditGPDetailsActivity"
+            android:exported="false"
+            android:label="Edit GP Details"
+            android:parentActivityName=".GPDetailsActivity"/>
+
+        <activity android:name=".EditInsuranceActivity"
+            android:exported="false"
+            android:label="Edit Insurance Details"
+            android:parentActivityName=".InsuranceDetailsActivity"/>
+
+        <activity android:name=".InsuranceDetailsActivity"
+            android:exported="false"
+            android:label="Insurance Details"
+            android:parentActivityName=".HomescreenActivity"/>
+
+        <activity android:name=".PaymentDetailsActivity"
+            android:exported="false"
+            android:label="Payment Details"
+            android:parentActivityName=".HomescreenActivity"/>
+
+        <activity android:name=".MedicalRecordsActivity"
+            android:exported="false"
+            android:label="Medical Records"
+            android:parentActivityName=".HomescreenActivity"/>
+
+
+        <activity android:name=".ContactGPActivity"
+            android:exported="false"
+            android:label="Contact GP"
+            android:parentActivityName=".HomescreenActivity"/>
+
+        <activity android:name=".HealthAIActivity"
+            android:exported="false"
+            android:label="Health AI"
+            android:parentActivityName=".HomescreenActivity"/>
+
+        <activity android:name=".ReviewActivity"
+            android:exported="false"
+            android:label="Reviews"
+            android:parentActivityName=".HomescreenActivity"/>
+
+        <activity
+            android:name=".Directions"
+            android:label="Directions Activity"
+            android:exported="true">
+        </activity>
+
+        <activity
+            android:name=".HomescreenActivity"
+            android:exported="false"
+            android:label="Home Screen"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAk6RXJNwq4D5e7xAXzeb3Kyhhpftk1P9s" />
+
+    </application>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
+</manifest>

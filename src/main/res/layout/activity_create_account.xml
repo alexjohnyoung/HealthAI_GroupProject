@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="24dp"
+    >
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginBottom="80dp"
+        android:src="@drawable/logo" />
+
+    <EditText
+        android:id="@+id/firstname_text"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_margin="8dp"
+        android:background="@drawable/edit_text_border"
+        android:ems="10"
+        android:hint="First Name"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/surname_text"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_margin="8dp"
+        android:background="@drawable/edit_text_border"
+        android:ems="10"
+        android:hint="Surname"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/pps_num_text"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_margin="8dp"
+        android:background="@drawable/edit_text_border"
+        android:ems="10"
+        android:hint="PPS Number"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/email_text"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_margin="8dp"
+        android:background="@drawable/edit_text_border"
+        android:ems="10"
+        android:hint="Email"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/password_text"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_margin="8dp"
+        android:background="@drawable/edit_text_border"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="text" />
+
+    <Button
+        android:id="@+id/create_account_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:background="#8FFFBF"
+        android:text="Create Account"
+        android:textColorLink="#FFFFFF" />
+</LinearLayout>
