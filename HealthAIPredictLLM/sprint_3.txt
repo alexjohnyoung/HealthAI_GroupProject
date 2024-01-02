@@ -1,0 +1,14 @@
+Sprint 3 Report
+1 What Went Well:
+
+There was a lot of research available already for the OpenAI Large Language Model (LLM) so that helped quite a bit. A lot of the required work for this sprint was already completed in the last sprint, so just more validation testing, refactoring etc and helper functions were created. I found that from my work through the last sprints that helped me gain a lot of traction in the next ones. 
+
+
+2 Challenges and Issues:
+
+At first, trying to get the OpenAI LLM configured was challenging, however through a lot of research and trial-and-error I was able to get it functional by testing a lot of different inputs through Python requests. It will still need to be tested when integrating with the website and application but thankfully most of the hard work is complete. 
+
+3 Specific actions that need to be taken to address challenges or to capitalize on what went well.
+Improvement Suggestions:
+
+More commenting throughout the code and communication could have helped the team out a bit. I think more planned meetings within the group could have aid the process a bit more, but through busy schedules etc between working, family and just life in general slowed down the process a small bit. 
