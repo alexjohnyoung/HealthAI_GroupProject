@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Patient List - HealthAI Web</title>
+</head>
+<body class="reg">
+    <header class="header">
+        <div class="header-logo">
+            <img src="logo.png" alt="HealthAI Logo" class="logo">
+            <h1>HealthAI Web</h1>
+        </div>
+        <nav class="header-nav">
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="about.html">About us</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        <h2>Patient List</h2>
+
+       
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Search for a patient...">
+            <button id="search-button" class="btn">Search</button>
+        </div>
+
+        
+        <div class="patient-details" id="patient-details">
+            <h2>Patient Details</h2>
+        </div>
+
+        <div>
+          <h2>Breast Cancer Prediction</h2>
+          <form id="breast-cancer-prediction-form">
+              <input type="number" id="mean_radius" name="mean_radius" placeholder="Mean Radius" required>
+              <input type="number" id="mean_texture" name="mean_texture" placeholder="Mean Texture" required>
+              <input type="number" id="mean_perimeter" name="mean_perimeter" placeholder="Mean Perimeter" required>
+              <input type="number" id="mean_area" name="mean_area" placeholder="Mean Area" required>
+              <input type="number" id="mean_smoothness" name="mean_smoothness" placeholder="Mean Smoothness" required>
+              <button type="submit" class="btn">Predict Breast Cancer</button>
+          </form>
+      </div>
+
+      <div>
+        <h2>Lung Cancer Prediction</h2>
+        <form id="lung-cancer-prediction-form">
+            <input type="text" id="gender" name="gender" placeholder="Gender (M/F)" required>
+            <input type="number" id="age" name="age" placeholder="Age" required>
+            <input type="text" id="smoking" name="smoking" placeholder="Smoking (Y/N)" required>
+            <input type="text" id="chronic_disease" name="chronic_disease" placeholder="Chronic Disease (Y/N)" required>
+            <input type="text" id="fatigue" name="fatigue" placeholder="Fatigue (Y/N)" required>
+            <input type="text" id="allergy" name="allergy" placeholder="Allergy (Y/N)" required>
+            <input type="text" id="wheezing" name="wheezing" placeholder="Wheezing (Y/N)" required>
+            <input type="text" id="alcohol_consuming" name="alcohol_consuming" placeholder="Alcohol Consuming (Y/N)" required>
+            <input type="text" id="coughing" name="coughing" placeholder="Coughing (Y/N)" required>
+            <input type="text" id="shortness_of_breath" name="shortness_of_breath" placeholder="Shortness of Breath (Y/N)" required>
+            <input type="text" id="swallowing_difficulty" name="swallowing_difficulty" placeholder="Swallowing Difficulty (Y/N)" required>
+            <input type="text" id="chest_pain" name="chest_pain" placeholder="Chest Pain (Y/N)" required>
+            <button type="submit" class="btn">Predict Lung Cancer</button>
+        </form>
+    </div>
+
+    <div>
+      <h2>Heart Disease Prediction</h2>
+      <form id="heart-disease-prediction-form">
+          <input type="number" id="age" name="age" placeholder="Age" required>
+          <input type="text" id="sex" name="sex" placeholder="Sex (M/F)" required>
+          <input type="number" id="resting_bp" name="resting_bp" placeholder="Resting Blood Pressure" required>
+          <input type="number" id="cholesterol" name="cholesterol" placeholder="Cholesterol" required>
+          <input type="text" id="fasting_bs" name="fasting_bs" placeholder="Fasting Blood Sugar > 120 mg/dl (Y/N)" required>
+          <input type="number" id="max_hr" name="max_hr" placeholder="Maximum Heart Rate" required>
+          <input type="text" id="exercise_angina" name="exercise_angina" placeholder="Exercise Induced Angina (Y/N)" required>
+          <input type="number" id="oldpeak" name="oldpeak" placeholder="ST Depression Induced by Exercise" required>
+
+          <div>Chest Pain Type:</div>
+          <input type="radio" id="chest_pain_type_asy" name="chest_pain_type" value="ASY">
+          <label for="chest_pain_type_asy">Asymptomatic</label>
+          <input type="radio" id="chest_pain_type_ata" name="chest_pain_type" value="ATA">
+          <label for="chest_pain_type_ata">Atypical Angina</label>
+          <input type="radio" id="chest_pain_type_nap" name="chest_pain_type" value="NAP">
+          <label for="chest_pain_type_nap">Non-Anginal Pain</label>
+          <input type="radio" id="chest_pain_type_ta" name="chest_pain_type" value="TA">
+          <label for="chest_pain_type_ta">Typical Angina</label>
+          
+          <div>Resting ECG:</div>
+          <input type="radio" id="resting_ecg_lvh" name="resting_ecg" value="LVH">
+          <label for="resting_ecg_lvh">Left Ventricular Hypertrophy</label>
+          <input type="radio" id="resting_ecg_normal" name="resting_ecg" value="Normal">
+          <label for="resting_ecg_normal">Normal</label>
+          <input type="radio" id="resting_ecg_st" name="resting_ecg" value="ST">
+          <label for="resting_ecg_st">ST-T Wave Abnormality</label>
+
+          <div>ST Slope:</div>
+          <input type="radio" id="st_slope_up" name="st_slope" value="Up">
+          <label for="st_slope_up">Upsloping</label>
+          <input type="radio" id="st_slope_flat" name="st_slope" value="Flat">
+          <label for="st_slope_flat">Flat</label>
+          <input type="radio" id="st_slope_down" name="st_slope" value="Down">
+          <label for="st_slope_down">Downsloping</label>
+          
+          <button type="submit" class="btn">Predict Heart Disease</button>
+      </form>
+
+  </div>
+
+    <script type="module">
+    // Import Firebase SDK and Firestore SDK
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+      import { getFirestore, query, collection, where, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+      import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyC5Q_T641swFy6w9XBwJPt2GFQ7R2cPTJo",
+          authDomain: "healthai-5976e.firebaseapp.com",
+          databaseURL: "https://healthai-5976e-default-rtdb.europe-west1.firebasedatabase.app",
+          projectId: "healthai-5976e",
+          storageBucket: "healthai-5976e.appspot.com",
+          messagingSenderId: "840550089463",
+          appId: "1:840550089463:web:04301c8d436acd2af449f2"
+        };
+      
+        // Initialize Firebase and Firestore
+        const app = initializeApp(firebaseConfig);
+        const firestore = getFirestore(app);
+        const auth = getAuth(app);
+        
+        let currentPatientDocId = null; // Global variable to store the current patient's document ID
+
+        auth.onAuthStateChanged(user => {
+          if (user) {
+            document.getElementById("search-button").addEventListener("click", async () => {
+              const searchTerm = document.getElementById("search-input").value.trim();
+              const searchTerms = searchTerm.split(' ');
+
+              let patientsQuery = query(collection(firestore, "patients"), where("userId", "==", user.uid));
+
+              if (searchTerms.length > 0 && searchTerms[0] !== "") {
+                patientsQuery = query(patientsQuery, where("firstName", "==", searchTerms[0]));
+              }
+              if (searchTerms.length > 1 && searchTerms[1] !== "") {
+                patientsQuery = query(patientsQuery, where("surname", "==", searchTerms[1]));
+              }
+
+              const querySnapshot = await getDocs(patientsQuery);
+
+              if (!querySnapshot.empty) {
+                let detailsHTML = "";
+                querySnapshot.docs.forEach(doc => {
+                  const data = doc.data();
+                  currentPatientDocId = doc.id; // Store the document ID
+                  detailsHTML += `<p>Date of Birth: ${data.dob}</p>`;
+                  detailsHTML += `<p>Address: ${data.address}</p>`;
+                  detailsHTML += `<p>Patient Notes: ${data.patientNotes}</p><hr>`;
+                });
+                document.getElementById("patient-details").innerHTML = detailsHTML;
+              } else {
+                document.getElementById("patient-details").innerHTML = "<p>No matching patients found.</p>";
+              }
+            });
+
+            document.getElementById("add-risk-info").addEventListener("click", async () => {
+              const riskAnalysis = document.getElementById("predict-analysis").value.trim();
+              if (!riskAnalysis) {
+                alert("Please enter the HealthAI analysis before submitting.");
+                return;
+              }
+              if (!currentPatientDocId) {
+                alert("Please search and select a patient before submitting their risk profile.");
+                return;
+              }
+
+              try {
+                const riskProfileRef = collection(firestore, `patients/${currentPatientDocId}/risk_profiles`);
+                await addDoc(riskProfileRef, { analysis: riskAnalysis, createdAt: new Date() });
+                alert("Risk assessment information added successfully.");
+                document.getElementById("predict-analysis").value = ''; // Clear the textarea
+              } catch (error) {
+                console.error("Error adding risk assessment information: ", error);
+                alert("There was an error submitting the risk assessment information.");
+              }
+            });
+
+          }
+        });
+      </script>
+    
+    <footer class="footer">
+        <div class="footer-info">
+            <p>Email: contact@healthaiweb.com</p>
+            <p>Address: MTU, Bishopstown, Cork, Ireland</p>
+        </div>
+        <div class="footer-social">
+            <a href="#" class="social-icon">Facebook</a>
+            <a href="#" class="social-icon">Twitter</a>
+            <a href="#" class="social-icon">LinkedIn</a>
+        </div>
+    </footer>
+</body>
+</html>
