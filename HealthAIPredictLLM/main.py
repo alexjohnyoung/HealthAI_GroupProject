@@ -8,7 +8,6 @@ def main():
     # Create our Singleton MLAnalyser Object
     analyser = MLAnalyser().get_instance()
 
-    #analyser.train_logistic_regression("breast.csv", "diagnosis")
     # Create our Singleton LLM Object
     gpt = GPT.get_instance(analyser)
 

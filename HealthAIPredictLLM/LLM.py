@@ -85,7 +85,7 @@ class GPT:
                 ["restingblood", "RestingBP"],
                 ["cholesterol", "Cholesterol"],
                 ["fastingblood", "FastingBS"],
-                ["restingelectro", "RestingECG"],
+                ["restingelec", "RestingECG"],
                 ["maximumheart", "MaxHR"],
                 ["exercise-induced", "ExerciseAngina"],
                 ["stdepression", "Oldpeak"],
@@ -224,7 +224,7 @@ class GPT:
         # If we do not have a 'risk_type' cookie in the session
         if "risk_type" not in session:
             # Set up a new 'risk_type' cookie in the session
-            session["risk_type"] = "lung"
+            session["risk_type"] = "breast"
 
         print(session["risk_type"])
         print(session["state"])
@@ -308,6 +308,9 @@ class GPT:
             # Put both the result and the probability into one string
             result = result + " - " + probability
 
+            session["risk_type"] = "none"
+            session["state"] = "initial"
+
             # Return the result to the user
             return jsonify({"msg": result})
 
@@ -326,8 +329,7 @@ class GPT:
                 {
                     "role": "system",
                     "content": "For breast cancer risk assessment, discuss factors like mean radius, "
-                               "mean texture, mean perimeter, mean area, and mean smoothness. Make sure to add colon"
-                               "before each question"
+                               "mean texture, mean perimeter, mean area, and mean smoothness."
                 },
                 {
                     "role": "system",
@@ -355,10 +357,11 @@ class GPT:
                     "content": "If the user wishes to enter details for a risk assessment, make sure to include in "
                                "your reply the text 'to assess your risk for [chosen risk assessment]' and put each "
                                "feature question in just one line so that the users entered details can be easily "
-                               "split using a newline and do not order them alphabetically."
+                               "split using a newline and do not order them alphabetically. Make sure when providing"
+                               "the different fields to put a colon (:) after each feaure question."
                 },
                 # For testing purposes, we will just comment out the context cookie for now
-                # *context,
+                *context,
                 {
                     "role": "user",
                     "content": user_input
