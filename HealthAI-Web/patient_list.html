@@ -37,13 +37,13 @@
         <div>
           <h2>Breast Cancer Prediction</h2>
           <form id="breast-cancer-prediction-form">
-              <input type="number" id="mean_radius" name="mean_radius" placeholder="Mean Radius" required>
-              <input type="number" id="mean_texture" name="mean_texture" placeholder="Mean Texture" required>
-              <input type="number" id="mean_perimeter" name="mean_perimeter" placeholder="Mean Perimeter" required>
-              <input type="number" id="mean_area" name="mean_area" placeholder="Mean Area" required>
-              <input type="number" id="mean_smoothness" name="mean_smoothness" placeholder="Mean Smoothness" required>
-              <button type="submit" class="btn">Predict Breast Cancer</button>
-          </form>
+            <input type="number" id="mean_radius" name="mean_radius" placeholder="Mean Radius" required step="0.0001">
+            <input type="number" id="mean_texture" name="mean_texture" placeholder="Mean Texture" required step="0.0001">
+            <input type="number" id="mean_perimeter" name="mean_perimeter" placeholder="Mean Perimeter" required step="0.0001">
+            <input type="number" id="mean_area" name="mean_area" placeholder="Mean Area" required step="0.0001">
+            <input type="number" id="mean_smoothness" name="mean_smoothness" placeholder="Mean Smoothness" required step="0.00001">
+            <button type="submit" class="btn">Predict Breast Cancer</button>
+        </form>
       </div>
 
       <div>
@@ -75,7 +75,7 @@
           <input type="text" id="fasting_bs" name="fasting_bs" placeholder="Fasting Blood Sugar > 120 mg/dl (Y/N)" required>
           <input type="number" id="max_hr" name="max_hr" placeholder="Maximum Heart Rate" required>
           <input type="text" id="exercise_angina" name="exercise_angina" placeholder="Exercise Induced Angina (Y/N)" required>
-          <input type="number" id="oldpeak" name="oldpeak" placeholder="ST Depression Induced by Exercise" required>
+          <input type="number" id="oldpeak" name="oldpeak" placeholder="ST Depression Induced by Exercise" required step="0.1">
 
           <div>Chest Pain Type:</div>
           <input type="radio" id="chest_pain_type_asy" name="chest_pain_type" value="ASY">
@@ -111,7 +111,7 @@
     <script type="module">
     // Import Firebase SDK and Firestore SDK
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
-      import { getFirestore, query, collection, where, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+      import { getFirestore, query, collection, where, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
       import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
 
         // Firebase configuration
@@ -130,6 +130,140 @@
         const firestore = getFirestore(app);
         const auth = getAuth(app);
         
+        async function sendDataToFlask(data, analysisType) {
+          const response = await fetch(`http://localhost:5000/analysis?type=${analysisType}`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data),
+          });
+          return response.json();
+        }
+        
+        async function savePredictionResult(patientId, predictionResult, analysisType) {
+          const patientDocRef = doc(firestore, "patients", patientId);
+
+          // Save the prediction result under a specific analysis type
+          const predictionFieldName = `predictions.${analysisType}`; 
+          const updateData = {};
+          updateData[predictionFieldName] = predictionResult;
+          
+          await updateDoc(patientDocRef, updateData);
+        }
+        
+        async function updatePatientDetailsUI(patientId) {
+          const patientDocRef = doc(firestore, "patients", patientId);
+          const docSnap = await getDoc(patientDocRef);
+
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            let detailsHTML = "<p>Date of Birth: " + data.dob + "</p>";
+            detailsHTML += "<p>Address: " + data.address + "</p>";
+            detailsHTML += "<p>Patient Notes: " + data.patientNotes + "</p>";
+
+            // Check and display predictions if available
+            if (data.predictions) {
+              detailsHTML += "<h3>Predictions:</h3>";
+              for (const [predictionKey, predictionValue] of Object.entries(data.predictions)) {
+                if (predictionValue.result && predictionValue.result.length >= 2) {
+                  detailsHTML += `<p>${predictionKey.charAt(0).toUpperCase() + predictionKey.slice(1)} Diagnosis: ${predictionValue.result[0]}</p>`;
+                  detailsHTML += `<p>${predictionKey.charAt(0).toUpperCase() + predictionKey.slice(1)} Probability: ${predictionValue.result[1]}</p>`;
+                }
+              }
+            }
+
+            document.getElementById("patient-details").innerHTML = detailsHTML;
+          } else {
+            document.getElementById("patient-details").innerHTML = "<p>No matching patients found.</p>";
+          }
+        }
+
+        // Generic function to handle form submission
+        async function handleFormSubmit(event, analysisType) {
+          event.preventDefault();
+          let formData = {};
+          const formElements = event.currentTarget.elements;
+
+          // Iterate over form elements and apply conversions
+          for (let i = 0; i < formElements.length; i++) {
+            const element = formElements[i];
+            if (element.name && element.type !== 'radio' && element.type !== 'submit') {
+                let value = element.value;
+                if (element.name === 'gender') {
+                    value = value === 'M' ? 1 : 0; // Convert 'M' to 1 and 'F' to 0
+                } else if (['smoking', 'chronic_disease', 'fatigue', 'allergy', 'wheezing', 
+                            'alcohol_consuming', 'coughing', 'shortness_of_breath', 
+                            'swallowing_difficulty', 'chest_pain', 'fasting_bs', 
+                            'exercise_angina'].includes(element.name)) {
+                    value = value === 'Y' ? 1 : 0; // Convert 'Y' to 1 and 'N' to 0
+                }
+                formData[element.name] = value;
+            }
+        }
+
+          if (analysisType === 'breast') {
+              formData = {
+                  mean_radius: formElements.mean_radius.value,
+                  mean_texture: formElements.mean_texture.value,
+                  mean_perimeter: formElements.mean_perimeter.value,
+                  mean_area: formElements.mean_area.value,
+                  mean_smoothness: formElements.mean_smoothness.value,
+                  type: analysisType 
+              };
+          } else if (analysisType === 'lung') {
+              formData = {
+                "GENDER": formData['gender'],
+                "AGE": formElements.age.value,
+                "SMOKING": formData['smoking'],
+                "CHRONIC_DISEASE": formData['chronic_disease'],
+                "FATIGUE": formData['fatigue'],
+                "ALLERGY": formData['allergy'],
+                "WHEEZING": formData['wheezing'],
+                "ALCOHOL CONSUMING": formData['alcohol_consuming'],
+                "COUGHING": formData['coughing'],
+                "SHORTNESS OF BREATH": formData['shortness_of_breath'],
+                "SWALLOWING DIFFICULTY": formData['swallowing_difficulty'],
+                "CHEST PAIN": formData['chest_pain'],
+                "type": analysisType
+              };
+          } else if (analysisType === 'heart') {
+              formData = {
+                "Age": formElements.age.value,
+                "Sex": formData['sex'],
+                "RestingBP": formElements.resting_bp.value,
+                "Cholesterol": formElements.cholesterol.value,
+                "FastingBS": formData['fasting_bs'],
+                "MaxHR": formElements.max_hr.value,
+                "ExerciseAngina": formData['exercise_angina'],
+                "Oldpeak": parseFloat(formElements.oldpeak.value), // Convert to float
+                "type": analysisType
+            };
+
+            formData['ChestPainType'] = formElements['chest_pain_type'].value;
+            formData['RestingECG'] = formElements['resting_ecg'].value;
+            formData['ST_Slope'] = formElements['st_slope'].value;         
+          }
+        
+          // send data to Flask server  
+          const result = await sendDataToFlask(formData, analysisType);
+          let diagnosis = result.result[0];
+          let probability = result.result[1];
+          
+          if (currentPatientDocId) {
+            await savePredictionResult(currentPatientDocId, result, analysisType);
+            await updatePatientDetailsUI(currentPatientDocId); // Update UI with new patient data
+          }
+
+          console.log(diagnosis, probability);
+        }
+
+        // Event listeners for each form
+        document.getElementById("breast-cancer-prediction-form").addEventListener("submit", (event) => handleFormSubmit(event, 'breast'));
+        document.getElementById("lung-cancer-prediction-form").addEventListener("submit", (event) => handleFormSubmit(event, 'lung'));
+        document.getElementById("heart-disease-prediction-form").addEventListener("submit", (event) => handleFormSubmit(event, 'heart'));
+
+
         let currentPatientDocId = null; // Global variable to store the current patient's document ID
 
         auth.onAuthStateChanged(user => {
@@ -156,36 +290,16 @@
                   currentPatientDocId = doc.id; // Store the document ID
                   detailsHTML += `<p>Date of Birth: ${data.dob}</p>`;
                   detailsHTML += `<p>Address: ${data.address}</p>`;
-                  detailsHTML += `<p>Patient Notes: ${data.patientNotes}</p><hr>`;
+                  detailsHTML += `<p>Patient Notes: ${data.patientNotes}</p>`;
                 });
                 document.getElementById("patient-details").innerHTML = detailsHTML;
+
+                // Now call the function to update the UI with predictions if they exist
+                await updatePatientDetailsUI(currentPatientDocId);
               } else {
                 document.getElementById("patient-details").innerHTML = "<p>No matching patients found.</p>";
               }
             });
-
-            document.getElementById("add-risk-info").addEventListener("click", async () => {
-              const riskAnalysis = document.getElementById("predict-analysis").value.trim();
-              if (!riskAnalysis) {
-                alert("Please enter the HealthAI analysis before submitting.");
-                return;
-              }
-              if (!currentPatientDocId) {
-                alert("Please search and select a patient before submitting their risk profile.");
-                return;
-              }
-
-              try {
-                const riskProfileRef = collection(firestore, `patients/${currentPatientDocId}/risk_profiles`);
-                await addDoc(riskProfileRef, { analysis: riskAnalysis, createdAt: new Date() });
-                alert("Risk assessment information added successfully.");
-                document.getElementById("predict-analysis").value = ''; // Clear the textarea
-              } catch (error) {
-                console.error("Error adding risk assessment information: ", error);
-                alert("There was an error submitting the risk assessment information.");
-              }
-            });
-
           }
         });
       </script>
