@@ -1,0 +1,30 @@
+### Sprint 2 Report:
+
+1 What Went Well:
+Taking another look if there was a different machine learning algorithm that might benefit more with hypertuning
+Learning about feature importance to get a glimpse of how each feature interacted with the predicted outcome
+Increasing the accuracy for the new Heart Disease dataset 
+Implementing the Large Language Model (OpenAI) into the project and learning to interface with it to teach it it's purpose, what input to take in and how to react to different pieces of input data - knowing when it's time to parse input from the user (when they are entering risk assessment information) and how to break up the string when doing so. 
+
+2 Challenges and Issues:
+Learning how to use hypertuning parameters and testing different algorithms (RandomForest, DecisionTree, SVM) to try find a better algorithm took some time (as well as trial and error).
+Integrating the Large Language Model into the project was difficult at first but was able to get a grasp on it fairly quickly. I can definitely feel much more confident now when it comes to moving through the system and working with LLMs after going through a few hurdles. Was stressful having to change the Heart Disease dataset as I would have to modify a lot of code.
+
+3 Identification of any problems, roadblocks, or issues encountered during the sprint.
+Action Items:
+Although it was more time-consuming than a problem, I researched hypertuning and the benefit that it could have in improving the accuracy through different machine learning algorithms and parameters as previously I had just worked with the different algorithms manually through testing. A lot of trial and error took a bit of time before experimenting with different SVM algorithm parameters before realising that Logistic Regression was performing the best.
+
+After testing with hypertuning and GridSearchCV, I worked on ways to increase the Heart Disease dataset that I was using but to no avail, so I found a different dataset on Kaggle and started modifiying every aspect of the code to work with it such as the Machine Learning class with one hot encoding and standardizing the new features. I had to change the API endpoint and what different features to take in from the previous dataset to perform the analysis without error. 
+
+The next problem I faced was trying to find the best LLM to integrate. I had tried Bard but I was only able to find an unofficial API on GitHub to work with and that was proving to be a pain. There was a lot of documentation online with OpenAI so I put a small bit of money in and found that to be a great solution. The next thing I had to do after training the model using Chat Completions was to identify a moment in between the conversation between the user and LLM for when they were inputting risk assessment information. Being honest, I was initially lost on this and knew that I had to do much more research on how this worked, I was very thankful of the documentation released by OpenAI for this. I also learned how Flask's "session" system worked with cookies so that the chatbot was able to remember the context of the conversation. 
+
+After this I had to parse the data accordingly for each dataset. To help with this I told the LLM to react with the string "to assess your risk for [chosen risk assessment] and to split each question in a newline to help parsing" when they were seeking for a risk assessment and when that moment was reached to take full use of Flask's "session" cookies, in particular setting up a "state" variable in their session to keep track that they were in the proccess of inputting information to the chatbot. The next thing was breaking up the data and for each dataset, parse the different fields accordingly. A lot of trial and error but got there in the end. 
+
+4 Specific actions that need to be taken to address challenges or to capitalize on what went well.
+Improvement Suggestions:
+I believe documentation is key to help others retrace my steps and even to remember myself where I left off proved vital. Changing to a different dataset showed me that the API endpoint was too hard-coded in the case of having to recode every parameter that it would take in so solved that with a dictionary list, mapped to the type that it takes in (future-proofing). Very stressful at times but just to stay consistent with the belief that everything was going to work out okay. 
+
+5 Ideas and suggestions for making future sprints more efficient, effective, or smoother.
+Feedback:
+Realising to keep the system as flexible as posssible so that if a change is needed to be made will not take too much time, keeping more documentation and comments to find where I left off. Could have found out about hypertuning earlier (although it proved to no avail in the end).
+Please see sprint_2.txt for a more in-depth analysis to follow me through my thinking if you would like.
