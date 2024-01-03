@@ -1,0 +1,32 @@
+Sprint 4 Report
+Goals Set For Work
+Before starting the project, I had set specific goals focusing on machine learning model development, dataset analysis, and integration of advanced technologies like OpenAI's Large Language Model. The primary objectives were to:
+
+Develop and optimize machine learning models for various health datasets.
+Implement preprocessing techniques to improve model accuracy.
+Integrate an AI model into a Flask API for real-time analysis.
+
+Highlights of Work
+What Went Well:
+Model Development and Preprocessing: Successfully applied logistic regression and explored other algorithms like RandomForest, DecisionTree, and SVM. Preprocessing techniques like one-hot encoding and SMOTE for imbalanced datasets significantly improved the models' accuracy.
+
+API Development: Created a robust Flask API with a functional @analysis route. This allowed for effective communication between the front-end and our machine learning models.
+
+LLM Integration: Successfully integrated the OpenAI Large Language Model into our project, enhancing the system's capabilities in processing and responding to user inputs.
+
+Challenges and Issues:
+Data Imbalance: Encountered imbalanced datasets in heart, breast, and lung cancer studies. Overcame this by implementing the SMOTE technique to generate synthetic samples.
+
+Feature Selection and Encoding: Faced challenges with feature selection and encoding. Removing one-hot encoding for specific features and adjusting other preprocessing steps resolved accuracy issues.
+
+LLM Configuration: Initially struggled with configuring the LLM for our specific use-case. This required extensive research and experimentation to achieve the desired functionality.
+
+Specific Actions and Improvement Suggestions:
+Continuous Learning: Emphasized the importance of ongoing research and testing, particularly with advanced models and new datasets.
+
+Documentation and Flexibility: Recognized the need for comprehensive documentation and building flexible systems to accommodate changes, such as dataset alterations or new feature integrations.
+
+Team Communication: Suggested more frequent and structured team meetings to improve collaboration and streamline the development process.
+
+Conclusion
+The journey through these sprints has been immensely educational and rewarding. Overcoming various challenges has not only bolstered my technical skills in machine learning and API development but also provided invaluable lessons in project management and teamwork. As I move forward, the focus will be on refining the models, enhancing system flexibility, and maintaining clear, concise documentation to support future developments.
