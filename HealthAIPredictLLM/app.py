@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from os import urandom
 
 
 def create_app(analyser, gpt):
     app = Flask(__name__)
+    CORS(app)  # Enable CORS
     app.secret_key = urandom(32)
 
     @app.route("/")
@@ -16,13 +18,18 @@ def create_app(analyser, gpt):
 
         return gpt.chat(input)
 
-    @app.route("/analysis")
+    @app.route("/analysis", methods=["POST"])
     def analysis():
+
+        if not request.is_json:
+            return jsonify({"error": "Invalid request format. Please send JSON data."}), 400
 
         feature_dict = {}
         parameter_names = {}
 
-        type_analysis = request.args.get("type", "invalid")
+        data = request.get_json()
+
+        type_analysis = data.get("type", "invalid")
 
         if type_analysis == "lung":
             parameter_names = {
@@ -68,7 +75,13 @@ def create_app(analyser, gpt):
 
         # Read the parameters and cast them to the specified data types
         for param_name, param_type in parameter_names.items():
-            feature_dict[param_name] = param_type(request.args.get(param_name, 0))
+            if param_name in data:
+                try:
+                    feature_dict[param_name] = param_type(data[param_name])
+                except ValueError:
+                    return jsonify({"error": f"Invalid type for parameter {param_name}"}), 400
+            else:
+                return jsonify({"error": f"Missing parameter {param_name}"}), 400
 
         # Check if feature list is empty
         if len(feature_dict) == 0:
